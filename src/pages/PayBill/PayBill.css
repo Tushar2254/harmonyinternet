@@ -1,0 +1,253 @@
+.paybill-section {
+  min-height: 100vh;
+  padding: 80px 24px;
+  background: linear-gradient(180deg, #0f172a 0%, #ffffff 100%);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.paybill-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 700px; height: 350px;
+  background: radial-gradient(ellipse, rgba(34,211,238,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.paybill-container {
+  width: 100%;
+  max-width: 460px;
+  position: relative;
+}
+
+.paybill-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.paybill-header h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.paybill-header p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.paybill-card {
+  background: #0f172a;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 20px;
+  padding: 36px 32px;
+  text-align: center;
+}
+
+.paybill-card-icon {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: rgba(34,211,238,0.08);
+  border: 2px solid rgba(34,211,238,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #38e8ff;
+  margin: 0 auto 18px;
+}
+
+.paybill-card-icon.success {
+  background: rgba(34,211,238,0.12);
+  border-color: rgba(34,211,238,0.35);
+  box-shadow: 0 0 32px rgba(34,211,238,0.18);
+}
+
+.paybill-card h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 7px;
+  letter-spacing: -0.3px;
+}
+
+.paybill-card > p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.65;
+}
+
+.login-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.login-type-tabs button {
+  flex: 1;
+  padding: 9px;
+  border-radius: 9px;
+  border: 1px solid rgba(15,23,42,0.08);
+  background: #f1f5f9;
+  color: #64748b;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.login-type-tabs button.active {
+  background: rgba(34,211,238,0.08);
+  border-color: rgba(34,211,238,0.25);
+  color: #38e8ff;
+}
+
+.paybill-form { text-align: left; }
+
+.form-group { margin-bottom: 18px; }
+
+.form-group label {
+  display: block;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 7px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  background: #f1f5f9;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 10px;
+  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.92rem;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  outline: none;
+}
+
+.form-group input:focus {
+  border-color: rgba(34,211,238,0.35);
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.07);
+}
+
+.form-group input::placeholder { color: #94a3b8; }
+
+.paybill-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #38e8ff, #60a5fa);
+  color: #fff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+  box-shadow: 0 4px 18px rgba(34,211,238,0.22);
+  margin-bottom: 10px;
+}
+
+.paybill-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(34,211,238,0.38);
+  opacity: 0.93;
+}
+
+.paybill-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.paybill-btn-ghost {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(15,23,42,0.09);
+  background: transparent;
+  color: #64748b;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.paybill-btn-ghost:hover {
+  border-color: rgba(15,23,42,0.12);
+  color: #0f172a;
+}
+
+.bill-details, .success-details {
+  background: #f1f5f9;
+  border: 1px solid rgba(15,23,42,0.06);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.bill-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.85rem;
+}
+
+.bill-row:last-child { border-bottom: none; }
+
+.bill-row span { color: #64748b; }
+.bill-row strong { color: #0f172a; font-weight: 600; }
+
+.bill-row.highlight {
+  background: rgba(34,211,238,0.05);
+  margin: 0 -18px;
+  padding: 11px 18px;
+  border-radius: 0 0 10px 10px;
+  border-bottom: none;
+}
+
+.bill-row.highlight span { color: #475569; font-weight: 600; }
+.bill-row.highlight strong { color: #38e8ff; font-size: 1.05rem; font-weight: 800; }
+
+.paybill-actions { display: flex; flex-direction: column; gap: 0; }
+
+.paybill-secure-note {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem !important;
+  color: #94a3b8 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 14px !important;
+  margin-bottom: 0 !important;
+}
+
+.paybill-secure-note i { color: #38e8ff; }

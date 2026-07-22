@@ -1,0 +1,219 @@
+/* ── HERO WRAPPER ── */
+.hero-wrapper {
+  position: relative;
+  height: 700vh;
+}
+
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── CANVAS ── */
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ── OVERLAY — lighter so frames show through better ── */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(13,21,38,0.08) 0%,
+    rgba(13,21,38,0.00) 30%,
+    rgba(13,21,38,0.45) 72%,
+    rgba(13,21,38,1)    100%
+  );
+  z-index: 1;
+}
+
+/* ── CONTENT ── */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 860px;
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34,211,238,0.10);
+  border: 1px solid rgba(34,211,238,0.22);
+  color: #38e8ff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 50px;
+  margin-bottom: 26px;
+  animation: fadeSlideUp 0.9s ease 0.2s both;
+}
+
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  background: #38e8ff;
+  border-radius: 50%;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.35; transform: scale(0.65); }
+}
+
+.hero-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.8rem, 7vw, 5.5rem);
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1.06;
+  margin-bottom: 22px;
+  animation: fadeSlideUp 0.9s ease 0.45s both;
+  letter-spacing: -1px;
+}
+
+.hero-title .teal {
+  background: linear-gradient(135deg, #38e8ff, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  color: #475569;
+  line-height: 1.75;
+  margin-bottom: 40px;
+  animation: fadeSlideUp 0.9s ease 0.7s both;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: 400;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeSlideUp 0.9s ease 0.95s both;
+  pointer-events: all;
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SCROLL HINT ── */
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: fadeSlideUp 0.9s ease 1.3s both;
+}
+
+.hero-scroll-hint span {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.scroll-mouse {
+  width: 20px; height: 34px;
+  border: 1.5px solid rgba(15,23,42,0.15);
+  border-radius: 10px;
+  position: relative;
+}
+
+.scroll-mouse::after {
+  content: '';
+  position: absolute;
+  top: 5px; left: 50%;
+  transform: translateX(-50%);
+  width: 3px; height: 6px;
+  background: #38e8ff;
+  border-radius: 2px;
+  animation: scrollBob 1.8s ease infinite;
+}
+
+@keyframes scrollBob {
+  0%   { top: 5px; opacity: 1; }
+  100% { top: 19px; opacity: 0; }
+}
+
+/* ── FRAME COUNTER ── */
+.frame-counter {
+  position: absolute;
+  top: 80px; right: 18px;
+  z-index: 10;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  font-family: monospace;
+}
+
+/* ── LOADING ── */
+.hero-loading {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  z-index: 10;
+}
+
+.hero-loading-bar {
+  width: 180px; height: 2px;
+  background: rgba(15,23,42,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.hero-loading-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #38e8ff, #60a5fa);
+  border-radius: 2px;
+  transition: width 0.1s linear;
+}
+
+.hero-loading p {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+@media (max-width: 600px) {
+  .hero-title { font-size: 2.4rem; letter-spacing: -0.5px; }
+  .hero-subtitle { font-size: 0.95rem; }
+}

@@ -1,0 +1,190 @@
+.navbar {
+  position: fixed;
+  top: 38px; left: 0; right: 0;
+  z-index: 1000;
+  padding: 0 24px;
+  transition: background 0.35s ease, box-shadow 0.35s ease, top 0.35s ease;
+}
+
+.navbar.top-hidden { top: 0; }
+
+.navbar.scrolled {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 1px 0 rgba(15,23,42,0.08), 0 4px 24px rgba(15,23,42,0.08);
+}
+
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── LOGO + BRAND ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo-img {
+  height: 56px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.nav-logo:hover .nav-logo-img {
+  transform: scale(1.05);
+}
+
+/* Brand text beside logo */
+.nav-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  gap: 3px;
+}
+
+.nav-brand-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.18rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  /* Gold gradient matching the logo */
+  background: linear-gradient(135deg, #b8860b 0%, #d4a017 40%, #c8930a 70%, #a07008 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+
+.nav-brand-sub {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-top: 1px;
+}
+
+/* LINKS */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav-link {
+  position: relative;
+  color: #475569;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 7px 13px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: color 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.1px;
+}
+
+.nav-link:hover {
+  color: #0f172a;
+  background: rgba(15,23,42,0.05);
+}
+
+.nav-link.active {
+  color: #0891b2;
+  background: rgba(8,145,178,0.07);
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 3px; left: 50%;
+  transform: translateX(-50%);
+  width: 4px; height: 4px;
+  background: #0891b2;
+  border-radius: 50%;
+}
+
+/* CTA */
+.nav-cta {
+  background: linear-gradient(135deg, #0891b2, #2563eb) !important;
+  color: #fff !important;
+  padding: 8px 20px !important;
+  border-radius: 8px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  box-shadow: 0 2px 12px rgba(8,145,178,0.25) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+  margin-left: 10px;
+}
+
+.nav-cta:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 20px rgba(8,145,178,0.40) !important;
+  opacity: 0.92 !important;
+}
+
+/* HAMBURGER */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px; height: 2px;
+  background: #475569;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* MOBILE DRAWER */
+.mobile-menu {
+  position: fixed;
+  top: 106px; left: 0; right: 0;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  padding: 16px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  transform: translateY(-110%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+  border-bottom: 1px solid rgba(15,23,42,0.08);
+  box-shadow: 0 8px 32px rgba(15,23,42,0.10);
+}
+
+.mobile-menu.open { transform: translateY(0); }
+.mobile-menu.top-hidden { top: 68px; }
+
+.mobile-menu .nav-link {
+  padding: 13px 16px;
+  font-size: 0.95rem;
+  border-radius: 9px;
+}
+
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
