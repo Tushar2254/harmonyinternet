@@ -7,6 +7,7 @@ const quickLinks = [
   { to: '/services', label: 'Services' },
   { to: '/plans',    label: 'Plans & Pricing' },
   { to: '/pay-bill', label: 'Pay Bill' },
+  { to: '/new-connection', label: 'New Connection' },
   { to: '/support',  label: 'Support' },
   { to: '/contact',  label: 'Contact' },
 ];
@@ -86,21 +87,21 @@ function Footer() {
             <div className="footer-contact-icon"><i className="fas fa-map-marker-alt"></i></div>
             <div>
               <strong>Address</strong>
-              <span>Sangamwadi, Pune — 411003</span>
+              <span>Shivajinagar, Pune - 411005</span>
             </div>
           </div>
           <div className="footer-contact-item">
             <div className="footer-contact-icon"><i className="fas fa-phone-alt"></i></div>
             <div>
               <strong>Phone</strong>
-              <span>+91 75845 26824</span>
+              <span>+91 7050101024</span>
             </div>
           </div>
           <div className="footer-contact-item">
             <div className="footer-contact-icon"><i className="fas fa-envelope"></i></div>
             <div>
               <strong>Email</strong>
-              <span>info@harmonynet.in</span>
+              <span>info@harmonyinternet.com</span>
             </div>
           </div>
           <div className="footer-contact-item">

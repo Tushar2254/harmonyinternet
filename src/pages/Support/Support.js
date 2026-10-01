@@ -69,8 +69,8 @@ function Support() {
       <section className="support-channels">
         <div className="channels-grid">
           {[
-            { icon: 'fas fa-phone-alt', color: '#00d4ff', title: '24x7x365 Phone Support', desc: 'Speak directly with a network engineer.', link: 'tel:+917584526824', linkLabel: '+91 75845 26824' },
-            { icon: 'fas fa-envelope',  color: '#0072ff', title: 'Email Support',       desc: 'Get a response within 2 hours.', link: 'mailto:support@harmonynet.in', linkLabel: 'support@harmonynet.in' },
+            { icon: 'fas fa-phone-alt', color: '#00d4ff', title: '24x7x365 Phone Support', desc: 'Speak directly with a network engineer.', link: 'tel:+917584526824', linkLabel: '+91 7050101024' },
+            { icon: 'fas fa-envelope',  color: '#0072ff', title: 'Email Support',       desc: 'Get a response within 2 hours.', link: 'mailto:support@harmonyinternet.com', linkLabel: 'support@harmonyinternet.com' },
             { icon: 'fas fa-comments',  color: '#7c3aed', title: 'Live Chat',           desc: 'Chat with us in real-time (coming soon).', link: '#', linkLabel: 'Start Chat' },
           ].map((ch, i) => (
             <div className="channel-card" key={i} data-aos="fade-up" data-aos-delay={i * 80}>

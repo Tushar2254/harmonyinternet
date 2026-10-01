@@ -25,7 +25,7 @@ function TopBar() {
         <div className="top-bar-left">
           <a href="tel:+917584526824" className="top-bar-item">
             <i className="fas fa-phone-alt"></i>
-            +91 75845 26824
+            +91 7050101024
           </a>
           <div className="top-bar-divider"></div>
           <a href="tel:18001207066" className="top-bar-item">
@@ -33,9 +33,9 @@ function TopBar() {
             1800-120-7066
           </a>
           <div className="top-bar-divider"></div>
-          <a href="mailto:info@harmonynet.in" className="top-bar-item">
+          <a href="mailto:info@harmonyinternet.com" className="top-bar-item">
             <i className="fas fa-envelope"></i>
-            info@harmonynet.in
+            info@harmonyinternet.com
           </a>
         </div>
 

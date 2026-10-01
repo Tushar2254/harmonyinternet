@@ -56,7 +56,7 @@ function Contact() {
 
             <div className="contact-info-items">
               {[
-                { icon: 'fas fa-map-marker-alt', label: 'Address',        value: 'Sangamwadi, Pune — 411003' },
+                { icon: 'fas fa-map-marker-alt', label: 'Address',        value: 'Shivajinagar, Pune - 411005' },
                 { icon: 'fas fa-phone-alt',      label: 'Phone',          value: '+91 75845 26824' },
                 { icon: 'fas fa-envelope',       label: 'Email',          value: 'info@harmonynet.in' },
                 { icon: 'fas fa-headset',        label: 'Support',        value: '24/7 Technical Support' },

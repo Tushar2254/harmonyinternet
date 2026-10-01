@@ -2,11 +2,11 @@ import { useState } from 'react';
 import PageWrapper from '../../components/PageWrapper/PageWrapper';
 import './NewConnection.css';
 
-const PHONE_NUMBER = '+91 75845 26824';
-const PHONE_LINK = 'tel:+917584526824';
+const PHONE_NUMBER = '+91 7050101024';
+const PHONE_LINK = 'tel:+917050101024';
 const TOLL_FREE_NUMBER = '1800-120-7066';
 const TOLL_FREE_LINK = 'tel:18001207066';
-const WHATSAPP_LINK = 'https://wa.me/917584526824?text=Hello%20Harmony%20Internet%2C%20I%20would%20like%20to%20apply%20for%20a%20new%20connection.';
+const WHATSAPP_LINK = 'https://wa.me/917050101024?text=Hello%20Harmony%20Internet%2C%20I%20would%20like%20to%20apply%20for%20a%20new%20connection.';
 
 function NewConnection() {
   const [submitted, setSubmitted] = useState(false);
