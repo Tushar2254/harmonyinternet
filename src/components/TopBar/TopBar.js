@@ -57,6 +57,10 @@ function TopBar() {
             <i className="fas fa-tachometer-alt"></i>
             Speed Test
           </Link>
+          <Link to="/new-connection" className="top-bar-new-connection">
+            <i className="fas fa-wifi"></i>
+            New Connection
+          </Link>
         </div>
 
       </div>

@@ -1,0 +1,249 @@
+/* ── Overlay ─────────────────────────────────────────────────── */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #03080f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.splash.enter { opacity: 1; pointer-events: all; }
+.splash.exit  { opacity: 0; transform: scale(1.05); pointer-events: none; }
+
+/* ── Rings ───────────────────────────────────────────────────── */
+.splash-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 175, 55, 0.12);
+  animation: ring-pulse 3.5s ease-out infinite;
+}
+
+.ring-1 { width: 220px;  height: 220px;  animation-delay: 0s; }
+.ring-2 { width: 420px;  height: 420px;  animation-delay: 0.7s; }
+.ring-3 { width: 640px;  height: 640px;  animation-delay: 1.4s; }
+
+@keyframes ring-pulse {
+  0%   { opacity: 0.7; transform: scale(0.75); }
+  100% { opacity: 0;   transform: scale(1.25); }
+}
+
+/* ── Particles ───────────────────────────────────────────────── */
+.splash-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #d4af37;
+  top: 50%;
+  left: 50%;
+  animation: particle-drift 5s linear infinite;
+  animation-delay: calc(var(--i) * 0.36s);
+}
+
+@keyframes particle-drift {
+  0% {
+    opacity: 0;
+    transform: rotate(calc(var(--i) * 25.7deg)) translateX(180px) scale(0);
+  }
+  20% { opacity: 1; }
+  80% { opacity: 0.8; }
+  100% {
+    opacity: 0;
+    transform: rotate(calc(var(--i) * 25.7deg + 360deg)) translateX(180px) scale(1);
+  }
+}
+
+/* ── Center ──────────────────────────────────────────────────── */
+.splash-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  animation: center-rise 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+@keyframes center-rise {
+  from { opacity: 0; transform: translateY(30px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Logo ────────────────────────────────────────────────────── */
+.splash-logo-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.splash-logo-glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,0.25) 0%, transparent 70%);
+  animation: glow-breathe 2.5s ease-in-out infinite;
+}
+
+.splash-logo-loader {
+  position: absolute;
+  inset: -14px;
+  z-index: 2;
+  border: 3px solid rgba(212, 175, 55, 0.14);
+  border-top-color: #f5d87a;
+  border-right-color: #d4af37;
+  border-radius: 50%;
+  box-shadow:
+    0 0 12px rgba(212, 175, 55, 0.35),
+    inset 0 0 10px rgba(212, 175, 55, 0.12);
+  animation: logo-loader-spin 1.15s linear infinite;
+  pointer-events: none;
+}
+
+.splash-logo-loader::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff4bd;
+  box-shadow: 0 0 10px 3px rgba(245, 216, 122, 0.75);
+}
+
+@keyframes logo-loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow-breathe {
+  0%, 100% { transform: scale(0.9); opacity: 0.6; }
+  50%       { transform: scale(1.1); opacity: 1; }
+}
+
+.splash-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5))
+          drop-shadow(0 0 40px rgba(212, 175, 55, 0.2));
+  animation: logo-float 3s ease-in-out infinite;
+}
+
+@keyframes logo-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* ── Brand ───────────────────────────────────────────────────── */
+.splash-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  animation: center-rise 1s 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.splash-brand-main {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #d4af37 0%, #f5d87a 50%, #d4af37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.02em;
+  animation: shimmer-text 3s linear infinite;
+}
+
+@keyframes shimmer-text {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.splash-brand-sub {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: rgba(212, 175, 55, 0.6);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* ── Tagline ─────────────────────────────────────────────────── */
+.splash-tagline {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 400;
+  animation: center-rise 1s 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* ── Loading bar ─────────────────────────────────────────────── */
+.splash-bar-track {
+  width: 220px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 0.75rem;
+  animation: center-rise 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.splash-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #d4af37, #f5d87a, #d4af37);
+  background-size: 200% 100%;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  animation:
+    bar-load    4s 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+    bar-shimmer 1.8s 0.5s linear infinite;
+}
+
+@keyframes bar-load {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+@keyframes bar-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Dots ────────────────────────────────────────────────────── */
+.splash-dots {
+  display: flex;
+  gap: 6px;
+  margin-top: 0.25rem;
+  animation: center-rise 1s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+.splash-dots span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.5);
+  animation: dot-bounce 1.2s ease-in-out infinite;
+}
+
+.splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+.splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-bounce {
+  0%, 60%, 100% { transform: translateY(0);    opacity: 0.4; }
+  30%            { transform: translateY(-6px); opacity: 1; }
+}

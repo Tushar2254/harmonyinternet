@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import PageWrapper from '../../components/PageWrapper/PageWrapper';
 import './Contact.css';
 
 function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 0.5;
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -15,6 +22,19 @@ function Contact() {
     <PageWrapper>
       {/* Hero */}
       <section className="contact-hero">
+        {/* Background video */}
+        <video
+          ref={videoRef}
+          className="contact-hero-video"
+          src="/Wifi1_vid.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+        {/* Overlay */}
+        <div className="contact-hero-overlay" />
+
         <div data-aos="fade-up">
           <span className="section-tag">Contact Us</span>
           <h1>Let's Get You<br />Connected</h1>

@@ -4,7 +4,7 @@ import './Support.css';
 
 const faqs = [
   { q: 'How do I reset my Wi-Fi router?',          a: 'Press and hold the reset button on the back of your router for 10 seconds until the lights blink. Wait 2 minutes for it to restart. Your default credentials are on the label on the router.' },
-  { q: 'Why is my internet slow?',                  a: 'Check if multiple devices are using bandwidth simultaneously. Try restarting your router. If the issue persists, contact our 24/7 support team and we will run a line test remotely.' },
+  { q: 'Why is my internet slow?',                  a: 'Check if multiple devices are using bandwidth simultaneously. Try restarting your router. If the issue persists, contact our 24x7x365 support team and we will run a line test remotely.' },
   { q: 'How do I upgrade my plan?',                 a: 'Call our support line or raise a ticket below. Plan upgrades are processed within 24 hours and take effect from the next billing cycle.' },
   { q: 'What is my Customer ID?',                   a: 'Your Customer ID is in the format HI-XXXX-XXXX and can be found on your welcome email, invoice, or by calling our support team.' },
   { q: 'How do I pay my bill?',                     a: 'Click "Pay Bill" in the navigation bar. Enter your mobile number or Customer ID to fetch your bill and pay securely via Razorpay.' },
@@ -48,10 +48,20 @@ function Support() {
     <PageWrapper>
       {/* Hero */}
       <section className="support-hero">
+        {/* Background image */}
+        <img
+          src="/IMG_3468.JPEG"
+          alt=""
+          className="support-hero-bg"
+          aria-hidden="true"
+        />
+        {/* Dark overlay */}
+        <div className="support-hero-overlay" />
+
         <div data-aos="fade-up">
           <span className="section-tag">Help Center</span>
           <h1>How Can We<br />Help You?</h1>
-          <p>Our expert support team is available 24/7 to resolve any connectivity issues.</p>
+          <p>Our expert support team is available 24x7x365 to resolve any connectivity issues.</p>
         </div>
       </section>
 
@@ -59,7 +69,7 @@ function Support() {
       <section className="support-channels">
         <div className="channels-grid">
           {[
-            { icon: 'fas fa-phone-alt', color: '#00d4ff', title: '24/7 Phone Support', desc: 'Speak directly with a network engineer.', link: 'tel:+917584526824', linkLabel: '+91 75845 26824' },
+            { icon: 'fas fa-phone-alt', color: '#00d4ff', title: '24x7x365 Phone Support', desc: 'Speak directly with a network engineer.', link: 'tel:+917584526824', linkLabel: '+91 75845 26824' },
             { icon: 'fas fa-envelope',  color: '#0072ff', title: 'Email Support',       desc: 'Get a response within 2 hours.', link: 'mailto:support@harmonynet.in', linkLabel: 'support@harmonynet.in' },
             { icon: 'fas fa-comments',  color: '#7c3aed', title: 'Live Chat',           desc: 'Chat with us in real-time (coming soon).', link: '#', linkLabel: 'Start Chat' },
           ].map((ch, i) => (

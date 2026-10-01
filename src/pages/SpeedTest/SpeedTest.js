@@ -10,61 +10,121 @@ import './SpeedTest.css';
 ───────────────────────────────────────── */
 
 // A publicly available large test file (Cloudflare's speed test endpoint)
-const DOWNLOAD_URL = 'https://speed.cloudflare.com/__down?bytes=25000000'; // 25 MB
+const DOWNLOAD_URL = 'https://speed.cloudflare.com/__down';
 const UPLOAD_URL   = 'https://speed.cloudflare.com/__up';
+const TEST_DURATION_MS = 5000;
+const UI_UPDATE_INTERVAL_MS = 100;
+const DOWNLOAD_CHUNK_BYTES = 10 * 1000 * 1000;
+const UPLOAD_CHUNK_BYTES = 2 * 1024 * 1024;
+const PING_SAMPLES = 4;
 
-async function measurePing() {
-  const t0 = performance.now();
-  try {
-    await fetch('https://speed.cloudflare.com/__down?bytes=1', { cache: 'no-store' });
-  } catch (_) { /* ignore */ }
-  return Math.round(performance.now() - t0);
+function ensureSuccessfulResponse(response, testName) {
+  if (!response.ok) {
+    throw new Error(`${testName} request failed with status ${response.status}`);
+  }
+}
+
+async function measurePing(onProgress) {
+  const samples = [];
+
+  for (let i = 0; i < PING_SAMPLES; i++) {
+    const t0 = performance.now();
+    const response = await fetch(
+      `${DOWNLOAD_URL}?bytes=1&r=${Math.random()}`,
+      { cache: 'no-store' }
+    );
+    ensureSuccessfulResponse(response, 'Ping');
+    await response.arrayBuffer();
+    samples.push(performance.now() - t0);
+    onProgress?.(((i + 1) / PING_SAMPLES) * 100);
+  }
+
+  samples.sort((a, b) => a - b);
+  return Math.round(samples[Math.floor(samples.length / 2)]);
 }
 
 async function measureDownload(onProgress) {
   const start = performance.now();
   let loaded = 0;
-  try {
-    const res = await fetch(DOWNLOAD_URL + '&r=' + Math.random(), { cache: 'no-store' });
+  let lastUiUpdate = 0;
+
+  while (performance.now() - start < TEST_DURATION_MS) {
+    const res = await fetch(
+      `${DOWNLOAD_URL}?bytes=${DOWNLOAD_CHUNK_BYTES}&r=${Math.random()}`,
+      { cache: 'no-store' }
+    );
+    ensureSuccessfulResponse(res, 'Download');
+
+    if (!res.body) throw new Error('Download streaming is not supported by this browser.');
+
     const reader = res.body.getReader();
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       loaded += value.length;
-      const elapsed = (performance.now() - start) / 1000;
-      const mbps = ((loaded * 8) / 1e6) / elapsed;
-      onProgress(Math.round(mbps * 10) / 10);
+      const elapsedMs = performance.now() - start;
+      const elapsedSeconds = Math.max(elapsedMs / 1000, 0.001);
+      const mbps = ((loaded * 8) / 1e6) / elapsedSeconds;
+
+      // Network streams can emit hundreds of chunks per second. Limiting visual
+      // updates keeps React rendering smooth while every byte still contributes
+      // to the final measurement.
+      if (elapsedMs - lastUiUpdate >= UI_UPDATE_INTERVAL_MS) {
+        lastUiUpdate = elapsedMs;
+        onProgress(Math.round(mbps * 10) / 10, Math.min((elapsedMs / TEST_DURATION_MS) * 100, 100));
+      }
     }
-  } catch (_) { /* ignore */ }
+  }
+
+  if (loaded === 0) throw new Error('The download test returned no data.');
+
   const elapsed = (performance.now() - start) / 1000;
-  return Math.round(((loaded * 8) / 1e6 / elapsed) * 10) / 10;
+  const finalMbps = Math.round(((loaded * 8) / 1e6 / elapsed) * 10) / 10;
+  onProgress(finalMbps, 100);
+  return finalMbps;
 }
 
 async function measureUpload(onProgress) {
-  // Upload 5 MB of random data
-  const SIZE = 5 * 1024 * 1024;
-  const data = new Uint8Array(SIZE);
-  crypto.getRandomValues(data);
+  const data = new Uint8Array(UPLOAD_CHUNK_BYTES);
+
+  // Web Crypto accepts at most 65,536 bytes per getRandomValues call.
+  // Fill the payload in chunks so the upload phase works in all browsers.
+  const CRYPTO_CHUNK_SIZE = 65536;
+  for (let offset = 0; offset < data.length; offset += CRYPTO_CHUNK_SIZE) {
+    crypto.getRandomValues(data.subarray(offset, Math.min(offset + CRYPTO_CHUNK_SIZE, data.length)));
+  }
+
   const blob = new Blob([data]);
 
   const start = performance.now();
-  try {
-    await fetch(UPLOAD_URL + '?r=' + Math.random(), {
+  let uploaded = 0;
+
+  while (performance.now() - start < TEST_DURATION_MS) {
+    const response = await fetch(UPLOAD_URL + '?r=' + Math.random(), {
       method: 'POST',
       body: blob,
       cache: 'no-store',
     });
-  } catch (_) { /* ignore */ }
+    ensureSuccessfulResponse(response, 'Upload');
+    uploaded += blob.size;
+
+    const elapsedMs = performance.now() - start;
+    const elapsedSeconds = Math.max(elapsedMs / 1000, 0.001);
+    const mbps = ((uploaded * 8) / 1e6) / elapsedSeconds;
+    onProgress(Math.round(mbps * 10) / 10, Math.min((elapsedMs / TEST_DURATION_MS) * 100, 100));
+  }
+
   const elapsed = (performance.now() - start) / 1000;
-  const mbps = Math.round(((SIZE * 8) / 1e6 / elapsed) * 10) / 10;
-  onProgress(mbps);
+  const mbps = Math.round(((uploaded * 8) / 1e6 / elapsed) * 10) / 10;
+  onProgress(mbps, 100);
   return mbps;
 }
 
 /* ─────────────────────────────────────────
    GAUGE COMPONENT
 ───────────────────────────────────────── */
-function Gauge({ value, max, label, unit, color }) {
+function Gauge({ value, label, color, progress, running }) {
+  const max     = value > 500 ? 1000 : 500;
   const pct     = Math.min(value / max, 1);
   const angle   = -135 + pct * 270; // sweep from -135° to +135°
   const r       = 80;
@@ -87,16 +147,31 @@ function Gauge({ value, max, label, unit, color }) {
   const trackStart = -135;
   const trackEnd   = 135;
   const fillEnd    = trackStart + pct * 270;
+  const ticks = Array.from({ length: 11 }, (_, i) => {
+    const tickAngle = trackStart + i * 27;
+    return {
+      inner: polarToXY(tickAngle, 66),
+      outer: polarToXY(tickAngle, 73),
+      active: i / 10 <= pct,
+    };
+  });
 
   return (
-    <div className="gauge-wrap">
+    <div className={`gauge-wrap ${running ? 'is-running' : ''}`}>
       <svg viewBox="0 0 200 200" className="gauge-svg">
+        <defs>
+          <linearGradient id="speedGradient" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#22d3ee" />
+            <stop offset="55%" stopColor="#3b82f6" />
+            <stop offset="100%" stopColor="#8b5cf6" />
+          </linearGradient>
+        </defs>
         {/* Track */}
         <path
           d={arcPath(trackStart, trackEnd, r)}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth="12"
+          stroke="rgba(148,163,184,0.16)"
+          strokeWidth="10"
           strokeLinecap="round"
         />
         {/* Fill */}
@@ -104,12 +179,24 @@ function Gauge({ value, max, label, unit, color }) {
           <path
             d={arcPath(trackStart, fillEnd, r)}
             fill="none"
-            stroke={color}
-            strokeWidth="12"
+            stroke="url(#speedGradient)"
+            strokeWidth="10"
             strokeLinecap="round"
             style={{ filter: `drop-shadow(0 0 8px ${color})` }}
           />
         )}
+        {ticks.map((tick, i) => (
+          <line
+            key={i}
+            x1={tick.inner.x}
+            y1={tick.inner.y}
+            x2={tick.outer.x}
+            y2={tick.outer.y}
+            stroke={tick.active ? color : 'rgba(148,163,184,0.28)'}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        ))}
         {/* Needle */}
         {(() => {
           const tip = polarToXY(angle, r - 10);
@@ -129,10 +216,12 @@ function Gauge({ value, max, label, unit, color }) {
       </svg>
 
       <div className="gauge-value">
-        <span className="gauge-number">{value > 0 ? value : '—'}</span>
-        <span className="gauge-unit">{unit}</span>
+        <span className="gauge-kicker">{label}</span>
+        <span className="gauge-number">{value > 0 ? value.toFixed(1) : '0'}</span>
+        <span className="gauge-unit">Mbps</span>
       </div>
-      <div className="gauge-label">{label}</div>
+      <div className="gauge-scale"><span>0</span><span>{max / 2}</span><span>{max}+</span></div>
+      {running && <div className="gauge-live"><span /> Live measurement · {Math.round(progress)}%</div>}
     </div>
   );
 }
@@ -148,7 +237,38 @@ function SpeedTestWidget() {
   const [download, setDownload] = useState(0);
   const [upload,   setUpload]   = useState(0);
   const [error,    setError]    = useState('');
+  const [testProgress, setTestProgress] = useState(0);
+  const [networkInfo, setNetworkInfo] = useState({
+    shortName: '—',
+    provider: '—',
+    ip: '—',
+    city: '—',
+  });
   const running = useRef(false);
+
+  const fetchNetworkInfo = useCallback(async () => {
+    try {
+      const response = await fetch('https://speed.cloudflare.com/meta', { cache: 'no-store' });
+      ensureSuccessfulResponse(response, 'Network information');
+      const data = await response.json();
+      const provider = data.asOrganization || (data.asn ? `AS${data.asn}` : 'Internet Provider');
+      const shortName = provider.split(/\s+/).slice(0, 2).join(' ');
+
+      setNetworkInfo({
+        shortName,
+        provider,
+        ip: data.clientIp || 'IP unavailable',
+        city: data.city || data.country || 'Location unavailable',
+      });
+    } catch (_) {
+      setNetworkInfo({
+        shortName: 'Unavailable',
+        provider: 'Unavailable',
+        ip: 'IP unavailable',
+        city: 'Location unavailable',
+      });
+    }
+  }, []);
 
   const reset = () => {
     setPhase('idle');
@@ -156,49 +276,75 @@ function SpeedTestWidget() {
     setDownload(0);
     setUpload(0);
     setError('');
+    setTestProgress(0);
+    setNetworkInfo({ shortName: '—', provider: '—', ip: '—', city: '—' });
   };
 
   const runTest = useCallback(async () => {
     if (running.current) return;
     running.current = true;
     reset();
+    fetchNetworkInfo();
 
     try {
       // 1. Ping
       setPhase('ping');
-      const p = await measurePing();
+      const p = await measurePing(progress => setTestProgress(progress * 0.1));
       setPing(p);
+      setTestProgress(10);
 
       // 2. Download
       setPhase('download');
-      await measureDownload(v => setDownload(v));
+      const downloadSpeed = await measureDownload((value, progress) => {
+        setDownload(value);
+        setTestProgress(10 + progress * 0.45);
+      });
+      setDownload(downloadSpeed);
+      setTestProgress(55);
 
       // 3. Upload
       setPhase('upload');
-      await measureUpload(v => setUpload(v));
+      const uploadSpeed = await measureUpload((value, progress) => {
+        setUpload(value);
+        setTestProgress(55 + progress * 0.45);
+      });
+      setUpload(uploadSpeed);
 
+      setTestProgress(100);
       setPhase('done');
     } catch (e) {
-      setError('Test failed. Please check your connection and try again.');
+      setError(e instanceof Error ? e.message : 'Test failed. Please check your connection and try again.');
       setPhase('idle');
     } finally {
       running.current = false;
     }
-  }, []);
+  }, [fetchNetworkInfo]);
 
   const isRunning = phase !== 'idle' && phase !== 'done';
   const isDone    = phase === 'done';
+  const currentSpeed = phase === 'upload' ? upload : phase === 'download' ? download : 0;
+  const currentLabel = phase === 'upload' ? 'Upload speed' : isDone ? 'Test complete' : 'Download speed';
+
+  const connectionRating = download >= 300
+    ? 'Exceptional connection'
+    : download >= 100
+      ? 'Excellent connection'
+      : download >= 50
+        ? 'Fast connection'
+        : download > 0
+          ? 'Everyday connection'
+          : '';
 
   const phaseLabel = {
-    idle:     'Press GO to start',
-    ping:     'Measuring ping...',
-    download: 'Testing download speed...',
-    upload:   'Testing upload speed...',
-    done:     'Test complete!',
+    idle:     'Ready for a full connection test',
+    ping:     'Finding the nearest test server',
+    download: 'Measuring sustained download performance',
+    upload:   'Measuring sustained upload performance',
+    done:     'Your connection results are ready',
   };
 
   return (
-    <div className="st-widget">
+    <div className={`st-widget ${isDone ? 'completed' : ''}`}>
 
       {/* Status bar */}
       <div className="st-status-bar">
@@ -215,90 +361,76 @@ function SpeedTestWidget() {
         ))}
       </div>
 
-      {/* Gauges */}
-      <div className="st-gauges">
-        <Gauge
-          value={download}
-          max={500}
-          label="Download"
-          unit="Mbps"
-          color="#38e8ff"
-        />
-
-        {/* GO button in center */}
-        <div className="st-center">
-          <button
-            className={`st-go-btn ${isRunning ? 'running' : ''} ${isDone ? 'done' : ''}`}
-            onClick={isRunning ? undefined : isDone ? reset : runTest}
-            disabled={false}
-          >
-            {isRunning ? (
-              <span className="st-spinner"></span>
-            ) : isDone ? (
-              <>
-                <i className="fas fa-redo"></i>
-                <span>Retest</span>
-              </>
-            ) : (
-              <>
-                <i className="fas fa-play"></i>
-                <span>GO</span>
-              </>
-            )}
-          </button>
-          <p className="st-phase-label">{phaseLabel[phase]}</p>
+      <div className="st-speed-results">
+        <div className={`st-speed-result download ${phase === 'download' ? 'active' : ''}`}>
+          <div className="st-speed-result-label"><i className="fas fa-arrow-circle-down" /> Download <span>Mbps</span></div>
+          <div className="st-speed-result-value">{download > 0 ? download.toFixed(2) : '—'}</div>
         </div>
+        <div className={`st-speed-result upload ${phase === 'upload' ? 'active' : ''}`}>
+          <div className="st-speed-result-label"><i className="fas fa-arrow-circle-up" /> Upload <span>Mbps</span></div>
+          <div className="st-speed-result-value">{upload > 0 ? upload.toFixed(2) : '—'}</div>
+        </div>
+      </div>
 
+      <div className="st-connection-details">
+        <div><span>Ping</span><strong><i className="fas fa-bolt" /> {ping > 0 ? ping : '—'} <small>ms</small></strong></div>
+        <div className="st-network-detail">
+          <span>Your network</span>
+          <strong><i className="fas fa-user" /> {networkInfo.shortName}</strong>
+          <small>{networkInfo.ip}</small>
+        </div>
+        <div className="st-network-detail">
+          <span>Internet provider</span>
+          <strong><i className="fas fa-building" /> {networkInfo.provider}</strong>
+          <small>{networkInfo.city}</small>
+        </div>
+      </div>
+
+      <div className="st-stage">
         <Gauge
-          value={upload}
-          max={500}
-          label="Upload"
-          unit="Mbps"
-          color="#60a5fa"
+          value={currentSpeed}
+          label={currentLabel}
+          color={phase === 'upload' ? '#8b5cf6' : '#22d3ee'}
+          progress={testProgress}
+          running={isRunning && phase !== 'ping'}
         />
       </div>
 
-      {/* Ping result */}
-      <div className="st-ping-row">
-        <div className={`st-ping-card ${ping > 0 ? 'visible' : ''}`}>
-          <i className="fas fa-satellite-dish"></i>
-          <div>
-            <span className="st-ping-value">{ping > 0 ? ping : '—'}</span>
-            <span className="st-ping-unit"> ms</span>
-          </div>
-          <div className="st-ping-label">Ping / Latency</div>
+      <div className="st-progress-panel">
+        <div className="st-progress-copy">
+          <span>{phaseLabel[phase]}</span>
+          <strong>{Math.round(testProgress)}%</strong>
         </div>
-
-        {isDone && (
-          <>
-            <div className="st-result-card">
-              <i className="fas fa-arrow-down" style={{ color: '#38e8ff' }}></i>
-              <div>
-                <span className="st-ping-value" style={{ color: '#38e8ff' }}>{download}</span>
-                <span className="st-ping-unit"> Mbps</span>
-              </div>
-              <div className="st-ping-label">Download</div>
-            </div>
-            <div className="st-result-card">
-              <i className="fas fa-arrow-up" style={{ color: '#60a5fa' }}></i>
-              <div>
-                <span className="st-ping-value" style={{ color: '#60a5fa' }}>{upload}</span>
-                <span className="st-ping-unit"> Mbps</span>
-              </div>
-              <div className="st-ping-label">Upload</div>
-            </div>
-          </>
-        )}
+        <div className="st-progress-track">
+          <div className="st-progress-fill" style={{ width: `${testProgress}%` }} />
+        </div>
       </div>
+
+      <div className="st-control-row">
+        <button
+          className={`st-go-btn ${isRunning ? 'running' : ''} ${isDone ? 'done' : ''}`}
+          onClick={runTest}
+          disabled={isRunning}
+        >
+          {isRunning ? <span className="st-spinner" /> : <i className={`fas ${isDone ? 'fa-redo' : 'fa-play'}`} />}
+          <span>{isRunning ? 'Testing' : isDone ? 'Test Again' : 'Start Speed Test'}</span>
+        </button>
+      </div>
+
+      {isDone && (
+        <div className="st-result-summary">
+          <div className="st-result-check"><i className="fas fa-check" /></div>
+          <div><span>Test complete</span><strong>{connectionRating}</strong></div>
+          <i className="fas fa-signal st-result-signal" />
+        </div>
+      )}
 
       {error && <p className="st-error"><i className="fas fa-exclamation-triangle"></i> {error}</p>}
 
-      {/* Ookla fallback */}
-      <div className="st-ookla-link">
-        <span>Prefer Ookla?</span>
-        <a href="https://www.speedtest.net" target="_blank" rel="noreferrer">
-          Run on Speedtest.net <i className="fas fa-external-link-alt"></i>
-        </a>
+      <div className="st-server-strip">
+        <span><i className="fas fa-server" /> Cloudflare Global Network</span>
+        <span><i className="fas fa-layer-group" /> Multi-sample test</span>
+        <span><i className="fas fa-shield-alt" /> Secure connection</span>
       </div>
     </div>
   );
@@ -316,7 +448,7 @@ const tips = [
 
 const speedGuide = [
   {
-    speed: '25 Mbps', label: 'Basic', title: 'Light Usage',
+    speed: '60 Mbps', label: 'Basic', title: 'Light Usage',
     uses: ['Web browsing', 'Social media', 'SD video streaming', 'Video calls (1 device)'],
   },
   {
@@ -324,7 +456,7 @@ const speedGuide = [
     uses: ['HD / 4K streaming', 'Online gaming', 'Video conferencing', 'Multiple devices'],
   },
   {
-    speed: '500+ Mbps', label: 'Premium', title: 'Power Users',
+    speed: '300+ Mbps', label: 'Premium', title: 'Power Users',
     uses: ['4K multi-stream', 'Large file uploads', 'Smart home devices', 'Business use'],
   },
 ];

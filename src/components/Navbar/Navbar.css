@@ -135,6 +135,147 @@
   opacity: 0.92 !important;
 }
 
+/* DROPDOWN */
+.nav-dropdown-wrap {
+  position: relative;
+}
+
+.nav-dropdown-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.nav-chevron {
+  font-size: 0.65rem;
+  transition: transform 0.25s ease;
+}
+
+.nav-chevron.open { transform: rotate(180deg); }
+
+.nav-dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(15,23,42,0.16);
+  z-index: 2000;
+  overflow: hidden;
+  animation: dropdown-in 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.nav-dropdown-header {
+  padding: 12px 14px 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.nav-dropdown-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0891b2;
+  text-decoration: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: #f0f9ff;
+  transition: background 0.2s;
+}
+
+.nav-dropdown-all:hover { background: #e0f2fe; }
+
+.nav-dropdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px;
+}
+
+.nav-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #334155;
+  font-size: 0.82rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s;
+}
+
+.nav-dropdown-item:hover {
+  background: color-mix(in srgb, var(--item-color) 10%, transparent);
+  color: #0f172a;
+}
+
+.ndi-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Mobile services */
+.mobile-svc-toggle {
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.mobile-svc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 0 4px 14px;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 16px;
+}
+
+.mobile-svc-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #475569;
+  font-size: 0.83rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s;
+}
+
+.mobile-svc-item:hover { background: #f1f5f9; color: #0f172a; }
+
+.mobile-svc-all {
+  color: #0891b2;
+  font-weight: 700;
+}
+
 /* HAMBURGER */
 .hamburger {
   display: none;
@@ -187,4 +328,107 @@
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .hamburger { display: flex; }
+}
+
+/* Rounded 3D logo movement inspired by the HGS navigation treatment */
+.nav-logo-mark {
+  position: relative;
+  display: block;
+  flex: 0 0 60px;
+  width: 60px;
+  height: 60px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  border-radius: 50%;
+  overflow: visible;
+  filter: drop-shadow(0 4px 3px rgba(71, 42, 2, 0.28)) drop-shadow(0 8px 7px rgba(15, 23, 42, 0.18));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.nav-logo-mark.compact {
+  flex-basis: 54px;
+  width: 54px;
+  height: 54px;
+}
+
+.nav-logo-flipper {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: harmonyLogoTravel 4.8s cubic-bezier(0.45, 0, 0.25, 1) infinite;
+}
+
+.nav-logo-mark .nav-logo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(49% at 50% 50%);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  filter:
+    drop-shadow(0 1px 0 rgba(255, 239, 174, 0.75))
+    drop-shadow(0 3px 0 rgba(150, 95, 8, 0.62))
+    drop-shadow(0 6px 2px rgba(71, 42, 2, 0.40))
+    drop-shadow(0 9px 7px rgba(15, 23, 42, 0.24));
+}
+
+.nav-logo-mark .nav-logo-face-front {
+  backface-visibility: visible;
+  -webkit-backface-visibility: visible;
+  transform: translateZ(6px);
+}
+
+.nav-logo-gloss {
+  position: absolute;
+  z-index: 3;
+  top: -28%;
+  bottom: -28%;
+  left: -60%;
+  width: 27%;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.92), transparent);
+  filter: blur(1px);
+  transform: skewX(-18deg) translateZ(24px);
+  animation: harmonyLogoGloss 3.4s ease-in-out infinite;
+}
+
+.nav-logo:hover .nav-logo-mark {
+  transform: translateY(-2px) scale(1.035);
+  filter: drop-shadow(0 6px 4px rgba(120, 76, 4, 0.28)) drop-shadow(0 11px 10px rgba(15,23,42,0.22)) drop-shadow(0 0 9px rgba(212,160,23,0.24));
+}
+
+@keyframes harmonyLogoTravel {
+  0%, 18% {
+    transform: translate3d(-4px, 0, 0) rotateZ(-5deg) rotateY(-7deg);
+  }
+  48% {
+    transform: translate3d(4px, -1px, 12px) rotateZ(5deg) rotateY(7deg);
+  }
+  78%, 100% {
+    transform: translate3d(-4px, 0, 0) rotateZ(-5deg) rotateY(-7deg);
+  }
+}
+
+@keyframes harmonyLogoGloss {
+  0%, 18% { left: -60%; opacity: 0; }
+  36% { opacity: 0.9; }
+  58%, 100% { left: 138%; opacity: 0; }
+}
+
+@media (max-width: 900px) {
+  .nav-logo-flipper,
+  .nav-logo-gloss {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-logo-flipper,
+  .nav-logo-gloss {
+    animation: none;
+  }
 }

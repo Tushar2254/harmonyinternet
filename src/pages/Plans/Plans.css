@@ -1,10 +1,60 @@
 /* ══ HERO ══ */
 .plans-hero {
-  padding: 100px 24px 60px;
-  text-align: center;
-  background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 100%);
-  position: relative;
+  background: linear-gradient(180deg, #0a0e1a 0%, #0f172a 100%);
+  padding: 10px 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* Framed poster */
+.plans-hero-poster-wrap {
+  width: 100%;
+  max-width: 1999px;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06),
+    0 8px 32px rgba(0,0,0,0.4),
+    0 24px 80px rgba(0,0,0,0.5),
+    0 0 60px rgba(8,145,178,0.12);
+  position: relative;
+}
+
+/* Subtle glow border */
+.plans-hero-poster-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 1.5px;
+  background: linear-gradient(135deg, rgba(56,232,255,0.35), rgba(99,102,241,0.25), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.plans-hero-bg {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 20px;
+}
+
+.plans-hero-overlay { display: none; }
+.plans-hero::before { display: none; }
+
+/* Text below poster */
+.plans-hero > [data-aos] {
+  width: 100%;
+  max-width: 960px;
+  text-align: center;
+  padding: 40px 24px 8px;
+  line-height: 1.5;
 }
 
 .plans-hero::before {
@@ -13,8 +63,9 @@
   top: 0; left: 50%;
   transform: translateX(-50%);
   width: 700px; height: 350px;
-  background: radial-gradient(ellipse, rgba(8,145,178,0.20) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(8,145,178,0.18) 0%, transparent 70%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .plans-hero h1 {
@@ -95,6 +146,258 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 22px;
+}
+
+/* ══ SPEED PLANS — NEW ══ */
+.speed-plans-section {
+  padding: 80px 24px 100px;
+  background: #f8fafc;
+}
+
+/* GST notice — Plans page */
+.gst-notice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(16,185,129,0.10);
+  border: 1.5px solid rgba(16,185,129,0.30);
+  color: #0f172a;
+  font-size: 0.85rem;
+  padding: 10px 22px;
+  border-radius: 50px;
+  max-width: fit-content;
+  margin: 0 auto 36px;
+}
+
+.gst-notice i { color: #10b981; font-size: 1rem; flex-shrink: 0; }
+.gst-notice strong { color: #065f46; font-weight: 700; }
+
+/* Speed tab row */
+.speed-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 auto 48px;
+  max-width: 900px;
+}
+
+.speed-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 22px;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.speed-tab:hover {
+  border-color: #0891b2;
+  color: #0891b2;
+}
+
+.speed-tab.active {
+  background: #0891b2;
+  border-color: #0891b2;
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(8,145,178,0.35);
+}
+
+.speed-tab-mbps {
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.speed-tab-sub {
+  font-size: 0.65rem;
+  font-weight: 600;
+  opacity: 0.75;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Duration cards grid */
+.duration-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.duration-card {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.duration-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(15,23,42,0.12);
+  border-color: #cbd5e1;
+}
+
+/* Popular — highlighted */
+.duration-card.dc-popular {
+  border-color: #0891b2;
+  box-shadow: 0 8px 32px rgba(8,145,178,0.18);
+}
+
+.duration-card.dc-popular:hover {
+  box-shadow: 0 20px 56px rgba(8,145,178,0.28);
+}
+
+/* Best value */
+.duration-card.dc-best {
+  border-color: #f59e0b;
+  box-shadow: 0 8px 32px rgba(245,158,11,0.15);
+}
+
+/* Badges */
+.dc-badge {
+  position: absolute;
+  top: 0; right: 0;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 0 16px 0 12px;
+}
+
+.dc-badge-popular {
+  background: #0891b2;
+  color: #fff;
+}
+
+.dc-badge-best {
+  background: #f59e0b;
+  color: #fff;
+}
+
+/* Days heading */
+.dc-days {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+  margin-top: 10px;
+}
+
+/* Total price */
+.dc-price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* Per month */
+.dc-per-month {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Features list */
+.dc-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  flex: 1;
+  margin-bottom: 24px;
+}
+
+.dc-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.dc-features li i {
+  color: #0891b2;
+  font-size: 0.68rem;
+  margin-top: 3px;
+  flex-shrink: 0;
+}
+
+.duration-card.dc-best .dc-features li i {
+  color: #f59e0b;
+}
+
+/* Buy Now button */
+.dc-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: #0f172a;
+  color: #fff;
+  text-align: center;
+  border-radius: 50px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+}
+
+.dc-btn:hover {
+  background: #0891b2;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(8,145,178,0.35);
+}
+
+.duration-card.dc-popular .dc-btn {
+  background: #0891b2;
+}
+
+.duration-card.dc-popular .dc-btn:hover {
+  background: #0369a1;
+  box-shadow: 0 6px 20px rgba(8,145,178,0.5);
+}
+
+.duration-card.dc-best .dc-btn {
+  background: #f59e0b;
+}
+
+.duration-card.dc-best .dc-btn:hover {
+  background: #d97706;
+  box-shadow: 0 6px 20px rgba(245,158,11,0.4);
+}
+
+@media (max-width: 1024px) {
+  .duration-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .duration-cards { grid-template-columns: 1fr; max-width: 360px; margin: 0 auto; }
+  .speed-tabs { gap: 8px; }
+  .speed-tab  { padding: 8px 16px; }
 }
 
 /* ══ BUSINESS PLANS ══ */

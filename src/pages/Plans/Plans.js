@@ -1,62 +1,70 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PageWrapper from '../../components/PageWrapper/PageWrapper';
-import PricingCard from '../../components/PricingCard/PricingCard';
 import './Plans.css';
 
-const plans = [
-  {
-    name: 'Basic',
-    tagline: 'Light home use',
-    icon: 'fas fa-home',
-    speed: 50,
-    monthlyPrice: 499,
-    popular: false,
-    features: [
-      { label: '50 Mbps Download',    disabled: false },
-      { label: 'Unlimited Data',       disabled: false },
-      { label: 'Free Installation',    disabled: false },
-      { label: 'Email Support',        disabled: false },
-      { label: 'Static IP',            disabled: true  },
-      { label: 'Priority Support',     disabled: true  },
-      { label: 'Free Router',          disabled: true  },
-    ],
-  },
-  {
-    name: 'Standard',
-    tagline: 'Families & WFH',
-    icon: 'fas fa-bolt',
-    speed: 100,
-    monthlyPrice: 799,
-    popular: true,
-    features: [
-      { label: '100 Mbps Download',   disabled: false },
-      { label: 'Unlimited Data',       disabled: false },
-      { label: 'Free Installation',    disabled: false },
-      { label: '24/7 Phone Support',   disabled: false },
-      { label: 'Static IP',            disabled: false },
-      { label: 'Priority Support',     disabled: true  },
-      { label: 'Free Router',          disabled: true  },
-    ],
-  },
-  {
-    name: 'Premium',
-    tagline: 'Power users & gamers',
-    icon: 'fas fa-rocket',
-    speed: 200,
-    monthlyPrice: 1299,
-    popular: false,
-    features: [
-      { label: '200 Mbps Download',   disabled: false },
-      { label: 'Unlimited Data',       disabled: false },
-      { label: 'Free Installation',    disabled: false },
-      { label: 'Priority 24/7 Support',disabled: false },
-      { label: 'Static IP',            disabled: false },
-      { label: 'Priority Support',     disabled: false },
-      { label: 'Free Wi-Fi Router',    disabled: false },
-    ],
-  },
+/* ── Speed tabs ── */
+const speedTabs = [
+  { label: '60 Mbps',  sublabel: 'Unlimited', speed: 50  },
+  { label: '100 Mbps', sublabel: 'Unlimited', speed: 100 },
+  { label: '200 Mbps', sublabel: 'Unlimited', speed: 200 },
+  { label: '300 Mbps', sublabel: 'Unlimited', speed: 300 },
+  { label: '400 Mbps', sublabel: 'Unlimited', speed: 400 },
 ];
+
+/* ── Duration plans per speed ── */
+const durationPlans = {
+  50: [
+    { days: 30,  total: 599,  perMonth: 599,  popular: false, bestValue: false,
+      features: ['60 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Unlimited OTT Compatibility'] },
+    { days: 90,  total: 1699, perMonth: 566,  popular: true,  bestValue: false,
+      features: ['60 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Unlimited OTT Compatibility'] },
+    { days: 180, total: 3199, perMonth: 533,  popular: false, bestValue: false,
+      features: ['60 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+    { days: 360, total: 5999, perMonth: 499,  popular: false, bestValue: true,
+      features: ['60 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+  ],
+  100: [
+    { days: 30,  total: 899,  perMonth: 899,  popular: false, bestValue: false,
+      features: ['100 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Unlimited OTT Compatibility'] },
+    { days: 90,  total: 2499, perMonth: 833,  popular: true,  bestValue: false,
+      features: ['100 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Unlimited OTT Compatibility'] },
+    { days: 180, total: 4699, perMonth: 783,  popular: false, bestValue: false,
+      features: ['100 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+    { days: 360, total: 8999, perMonth: 749,  popular: false, bestValue: true,
+      features: ['100 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+  ],
+  200: [
+    { days: 30,  total: 1299, perMonth: 1299, popular: false, bestValue: false,
+      features: ['200 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 90,  total: 3699, perMonth: 1233, popular: true,  bestValue: false,
+      features: ['200 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 180, total: 6999, perMonth: 1166, popular: false, bestValue: false,
+      features: ['200 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+    { days: 360, total: 12999,perMonth: 1083, popular: false, bestValue: true,
+      features: ['200 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+  ],
+  300: [
+    { days: 30,  total: 1799, perMonth: 1799, popular: false, bestValue: false,
+      features: ['300 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 90,  total: 4999, perMonth: 1666, popular: true,  bestValue: false,
+      features: ['300 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 180, total: 9499, perMonth: 1583, popular: false, bestValue: false,
+      features: ['300 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+    { days: 360, total: 17999,perMonth: 1499, popular: false, bestValue: true,
+      features: ['300 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+  ],
+  400: [
+    { days: 30,  total: 2299, perMonth: 2299, popular: false, bestValue: false,
+      features: ['400 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 90,  total: 6499, perMonth: 2166, popular: true,  bestValue: false,
+      features: ['400 Mbps Unlimited Data','FREE Installation','4-Hour Activation','₹10/Hour Downtime Insurance','100% Fiber Internet','24×7 AI NOC Support','Static IP Address'] },
+    { days: 180, total: 12499,perMonth: 2083, popular: false, bestValue: false,
+      features: ['400 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+    { days: 360, total: 23999,perMonth: 1999, popular: false, bestValue: true,
+      features: ['400 Mbps Unlimited Data','FREE Dual Band Router','FREE Installation','₹10/Hour Downtime Insurance','100% Fiber Internet','99.95% Uptime','24×7 AI NOC Support'] },
+  ],
+};
 
 const businessPlans = [
   { name: 'Business 500', speed: '500 Mbps', price: '₹2,499/mo', icon: 'fas fa-building',      color: '#059669' },
@@ -65,59 +73,99 @@ const businessPlans = [
 ];
 
 const comparison = [
-  { feature: 'Download Speed',    basic: '50 Mbps',   standard: '100 Mbps',  premium: '200 Mbps' },
-  { feature: 'Upload Speed',      basic: '25 Mbps',   standard: '50 Mbps',   premium: '100 Mbps' },
+  { feature: 'Download Speed',    basic: '60 Mbps',   standard: '100 Mbps',  premium: '200 Mbps' },
+  { feature: 'Upload Speed',      basic: '25 Mbps',   standard: '60 Mbps',   premium: '100 Mbps' },
   { feature: 'Data Limit',        basic: 'Unlimited', standard: 'Unlimited', premium: 'Unlimited' },
   { feature: 'Static IP',         basic: '✗',         standard: '✓',         premium: '✓' },
-  { feature: 'Support',           basic: 'Email',     standard: '24/7 Phone',premium: 'Priority' },
+  { feature: 'Support',           basic: 'Email',     standard: '24x7x365 Phone',premium: 'Priority' },
   { feature: 'Free Router',       basic: '✗',         standard: '✗',         premium: '✓' },
   { feature: 'Installation',      basic: 'Free',      standard: 'Free',      premium: 'Free' },
   { feature: 'Contract',          basic: 'None',      standard: 'None',      premium: 'None' },
 ];
 
 function Plans() {
-  const [yearly, setYearly] = useState(false);
+  const [activeSpeed, setActiveSpeed] = useState(50);
+
+  const plans = durationPlans[activeSpeed];
 
   return (
     <PageWrapper>
       {/* Hero */}
       <section className="plans-hero">
+        <div className="plans-hero-poster-wrap">
+          <img
+            src="/Plans/ChatGPT Image Sep 1, 2026, 03_22_06 AM.png"
+            alt="Harmony Internet Plans"
+            className="plans-hero-bg"
+          />
+        </div>
+        <div className="plans-hero-overlay" />
         <div data-aos="fade-up">
-          <span className="section-tag">Pricing</span>
-          <h1>Plans for Every<br />Connection Need</h1>
-          <p>Simple, transparent pricing. No hidden fees. No contracts. Cancel anytime.</p>
+          {/* <span className="section-tag">Pricing</span> */}
+          
+          
         </div>
       </section>
 
-      {/* Toggle */}
-      <div className="plans-toggle-bar" data-aos="fade-up">
-        <span className={`toggle-label ${!yearly ? 'active' : ''}`}>Monthly</span>
-        <div
-          className={`toggle-switch ${yearly ? 'on' : ''}`}
-          onClick={() => setYearly(p => !p)}
-          role="switch"
-          aria-checked={yearly}
-          tabIndex={0}
-          onKeyDown={e => e.key === 'Enter' && setYearly(p => !p)}
-        >
-          <div className="toggle-knob" />
-        </div>
-        <span className={`toggle-label ${yearly ? 'active' : ''}`}>Yearly</span>
-        {yearly && <span className="yearly-badge">2 Months Free</span>}
-      </div>
-
-      {/* Home Plans */}
-      <section className="plans-section">
+      {/* ── NEW: Speed tabs + Duration cards ── */}
+      <section className="speed-plans-section">
         <div className="section-header" data-aos="fade-up">
           <span className="section-tag">Home Plans</span>
-          <h2>For Homes &amp; Individuals</h2>
+          <h2>Choose Your Speed</h2>
+          <p>Select a speed and pick the duration that saves you the most.</p>
         </div>
-        <div className="plans-grid-3">
+
+        
+        {/* Speed tabs */}
+        <div className="speed-tabs" data-aos="fade-up">
+          {speedTabs.map(tab => (
+            <button
+              key={tab.speed}
+              className={`speed-tab ${activeSpeed === tab.speed ? 'active' : ''}`}
+              onClick={() => setActiveSpeed(tab.speed)}
+            >
+              <span className="speed-tab-mbps">{tab.label}</span>
+              <span className="speed-tab-sub">{tab.sublabel}</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Duration cards */}
+        <div className="duration-cards">
           {plans.map((plan, i) => (
-            <div key={i} data-aos="fade-up" data-aos-delay={i * 100}>
-              <PricingCard plan={plan} yearly={yearly} />
+            <div
+              key={i}
+              className={`duration-card ${plan.popular ? 'dc-popular' : ''} ${plan.bestValue ? 'dc-best' : ''}`}
+              data-aos="fade-up"
+              data-aos-delay={i * 80}
+            >
+              {plan.popular   && <div className="dc-badge dc-badge-popular">Most Popular</div>}
+              {plan.bestValue && <div className="dc-badge dc-badge-best">Best Value</div>}
+
+              <div className="dc-days">{plan.days} Days</div>
+              <div className="dc-price">₹{plan.total.toLocaleString('en-IN')}</div>
+              <div className="dc-per-month">₹{plan.perMonth.toLocaleString('en-IN')}/month</div>
+
+              <ul className="dc-features">
+                {plan.features.map((f, j) => (
+                  <li key={j}>
+                    <i className="fas fa-check" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <Link to="/contact" className="dc-btn">
+                Buy Now
+              </Link>
             </div>
           ))}
+        </div><br />
+        
+        {/* GST notice */}
+        <div className="gst-notice" data-aos="fade-up">
+          <i className="fas fa-check-circle" />
+          <span>All Plans are <strong>Unlimited</strong> &amp; Include <strong>GST</strong>. No Extra Charges.</span>
         </div>
       </section>
 
@@ -156,9 +204,9 @@ function Plans() {
             <thead>
               <tr>
                 <th>Feature</th>
-                <th>Basic</th>
-                <th className="popular-col">Standard <span>Popular</span></th>
-                <th>Premium</th>
+                <th>60 Mbps</th>
+                <th className="popular-col">100 Mbps <span>Popular</span></th>
+                <th>200 Mbps</th>
               </tr>
             </thead>
             <tbody>
@@ -185,7 +233,7 @@ function Plans() {
           {[
             { q: 'Is there a contract?',           a: 'No contracts. All plans are month-to-month. You can cancel anytime without any penalty.' },
             { q: 'How fast is installation?',      a: 'We complete installation within 24 hours of subscription confirmation, at a time convenient for you.' },
-            { q: 'What if my internet goes down?', a: 'Our 24/7 support team is always available. Most issues are resolved remotely within minutes.' },
+            { q: 'What if my internet goes down?', a: 'Our 24x7x365 support team is always available. Most issues are resolved remotely within minutes.' },
             { q: 'Can I upgrade my plan?',         a: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect from the next billing cycle.' },
           ].map((faq, i) => (
             <div className="faq-card" key={i}>

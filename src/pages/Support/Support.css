@@ -1,9 +1,36 @@
 .support-hero {
   padding: 100px 24px 80px;
   text-align: center;
-  background: linear-gradient(180deg, #0f172a 0%, #ffffff 100%);
+  background: #0f172a;
   position: relative;
   overflow: hidden;
+}
+
+/* Background image */
+.support-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.99;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dark overlay */
+.support-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,14,30,0.60) 0%, rgba(10,14,30,0.88) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.support-hero > [data-aos] {
+  position: relative;
+  z-index: 2;
 }
 
 .support-hero::before {
@@ -14,22 +41,27 @@
   width: 700px; height: 350px;
   background: radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .support-hero h1 {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   font-weight: 900;
-  color: #0f172a;
+  color: #ffffff;
   margin-bottom: 18px;
   position: relative;
   letter-spacing: -0.8px;
 }
 
+.support-hero .section-tag {
+  color: #38e8ff;
+}
+
 .support-hero p {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.05rem;
-  color: #64748b;
+  color: rgba(255,255,255,0.70);
   max-width: 520px;
   margin: 0 auto;
   line-height: 1.75;
@@ -98,6 +130,9 @@
 .channel-card a:hover { opacity: 0.7; }
 
 .faq-section { padding: 100px 24px; background: #0f172a; }
+
+.faq-section .section-header h2 { color: #ffffff; }
+.faq-section .section-tag { color: #38e8ff; }
 
 .faq-accordion {
   max-width: 760px;

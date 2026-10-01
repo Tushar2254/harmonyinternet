@@ -1,7 +1,7 @@
 /* ── HERO WRAPPER ── */
 .hero-wrapper {
   position: relative;
-  height: 700vh;
+  height: 500vh;
 }
 
 .hero-sticky {
@@ -21,6 +21,10 @@
   inset: 0;
   width: 100%;
   height: 100%;
+  image-rendering: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: strict;
 }
 
 /* ── OVERLAY — lighter so frames show through better ── */
@@ -78,21 +82,106 @@
 }
 
 .hero-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.8rem, 7vw, 5.5rem);
-  font-weight: 900;
-  color: #0f172a;
-  line-height: 1.06;
-  margin-bottom: 22px;
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.85rem, 6.25vw, 5.25rem);
+  font-weight: 750;
+  font-style: normal;
+  color: #ffffff;
+  line-height: 1.02;
+  margin-bottom: 28px;
   animation: fadeSlideUp 0.9s ease 0.45s both;
-  letter-spacing: -1px;
+  letter-spacing: -2.4px;
+  text-shadow:
+    0 2px 2px rgba(0,0,0,0.48),
+    0 10px 34px rgba(0,0,0,0.42);
+  text-wrap: balance;
 }
 
-.hero-title .teal {
-  background: linear-gradient(135deg, #38e8ff, #60a5fa);
+/* ── Word reveal wrapper ── */
+.word-reveal-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+/* Each scroll milestone fades its words smoothly into place */
+.word-reveal {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  transform: translateY(14px);
+  opacity: 0;
+  transition:
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.8s ease;
+  will-change: transform, opacity;
+}
+
+/* When its scroll milestone is reached, fade from 0% to 100% opacity */
+.word-reveal-wrap.revealed .word-reveal {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Icy aqua tones sampled from the animated network background */
+.hero-title .hero-title-primary .word-reveal {
+  background: linear-gradient(110deg, #ecfeff 0%, #a5f3fc 32%, #67e8f9 58%, #f0fdfa 82%, #ecfeff 100%);
+  background-size: 220% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  filter: drop-shadow(0 0 9px rgba(103,232,249,0.18)) drop-shadow(0 8px 18px rgba(0,0,0,0.32));
+  animation: heroTitleGradient 7s ease-in-out infinite;
+}
+
+/* Cyan, blue and emerald echo the globe and network highlights */
+.hero-title .teal .word-reveal {
+  background: linear-gradient(110deg, #5eead4 0%, #22d3ee 27%, #38bdf8 55%, #34d399 80%, #5eead4 100%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 12px rgba(45,212,191,0.25)) drop-shadow(0 8px 20px rgba(14,116,144,0.28));
+  animation: heroTitleGradient 6s ease-in-out infinite;
+}
+
+.hero-title .teal {
+  display: inline-block;
+  position: relative;
+  margin-top: 8px;
+  padding-bottom: 14px;
+}
+
+.hero-title .teal::after {
+  content: '';
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 2px;
+  height: 3px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #2dd4bf 20%, #22d3ee 44%, #38bdf8 66%, #34d399 82%, transparent);
+  box-shadow: 0 0 13px rgba(34,211,238,0.46), 0 0 25px rgba(52,211,153,0.2);
+  transform: scaleX(0);
+  opacity: 0;
+  transform-origin: center;
+  transition: transform 0.8s cubic-bezier(.16,1,.3,1), opacity 0.6s ease;
+}
+
+.hero-title .teal.revealed::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+@keyframes heroTitleGradient {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* hero action buttons reveal */
+.reveal-actions {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards;
 }
 
 .hero-subtitle {
@@ -126,7 +215,7 @@
 .hero-scroll-hint {
   position: absolute;
   bottom: 32px;
-  left: 50%;
+  left: 45.5%;
   transform: translateX(-50%);
   z-index: 3;
   display: flex;
@@ -214,6 +303,18 @@
 }
 
 @media (max-width: 600px) {
-  .hero-title { font-size: 2.4rem; letter-spacing: -0.5px; }
+  .hero-wrapper { height: 430vh; }
+  .hero-title { font-size: 2.2rem; letter-spacing: -1px; line-height: 1.06; }
+  .hero-title .teal { margin-top: 5px; padding-bottom: 11px; }
   .hero-subtitle { font-size: 0.95rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal,
+  .hero-title .hero-title-primary .word-reveal,
+  .hero-title .teal .word-reveal,
+  .hero-title .teal::after {
+    animation: none;
+    transition: none;
+  }
 }

@@ -35,8 +35,7 @@ function Footer() {
             </div>
           </Link>
           <p className="footer-desc">
-            Harmony Internet Private Limited — delivering infinite connectivity through
-            premium fiber optic broadband across Pune since 2014.
+            Harmony Internet is a dynamic and technology-driven Internet Service Provider (ISP) with extensive experience in delivering robust next-generation fiber optic network solutions, backed by a customer-first approach across pune since 2014.
           </p>
           <div className="footer-socials">
             <a href="https://facebook.com" className="footer-social" target="_blank" rel="noreferrer" aria-label="Facebook">

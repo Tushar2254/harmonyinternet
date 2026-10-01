@@ -1,9 +1,35 @@
 .contact-hero {
   padding: 100px 24px 80px;
   text-align: center;
-  background: linear-gradient(180deg, #0f172a 0%, #ffffff 100%);
+  background: #0f172a;
   position: relative;
   overflow: hidden;
+}
+
+/* Video background */
+.contact-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.99;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Dark overlay on top of video */
+.contact-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,14,30,0.65) 0%, rgba(10,14,30,0.85) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.contact-hero > [data-aos] {
+  position: relative;
+  z-index: 2;
 }
 
 .contact-hero::before {
@@ -14,22 +40,27 @@
   width: 700px; height: 350px;
   background: radial-gradient(ellipse, rgba(34,211,238,0.08) 0%, transparent 70%);
   pointer-events: none;
+  z-index: 1;
 }
 
 .contact-hero h1 {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(2.4rem, 5vw, 3.8rem);
   font-weight: 900;
-  color: #0f172a;
+  color: #ffffff;
   margin-bottom: 18px;
   position: relative;
   letter-spacing: -0.8px;
 }
 
+.contact-hero .section-tag {
+  color: #38e8ff;
+}
+
 .contact-hero p {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.05rem;
-  color: #64748b;
+  color: rgba(255,255,255,0.70);
   max-width: 520px;
   margin: 0 auto;
   line-height: 1.75;

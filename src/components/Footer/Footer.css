@@ -23,7 +23,7 @@
 
 /* Same image as navbar */
 .footer-logo-img {
-  height: 114px; width: 94px;
+  height: 98px;
   width: auto;
   object-fit: contain;
   display: block;
@@ -100,11 +100,11 @@
 
 .footer-col-title {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.68rem;
+  font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.95);
   margin-bottom: 18px;
 }
 
